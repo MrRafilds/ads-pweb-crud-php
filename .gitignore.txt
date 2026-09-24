@@ -1,0 +1,27 @@
+# Dependências do Composer
+/vendor/
+
+# Arquivos de ambiente e sensíveis
+.env
+.env.local
+*.env
+
+# Logs e arquivos temporários
+/storage/logs/*.log
+/var/log/
+*.log
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# IDEs e Editores (VS Code, PhpStorm, etc.)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos de cache comuns
+/bootstrap/cache/*.php
+/var/cache/
+/tmp/
