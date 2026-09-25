@@ -2,6 +2,7 @@
 include_once './conexao.php';
 session_start();
 
+// Autenticação do Usuário
 if (isset($_POST['usuario'])) {
     $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
@@ -10,7 +11,7 @@ if (isset($_POST['usuario'])) {
     $dados = mysqli_fetch_assoc($consulta);
 
     if ($dados != null) {
-        $_SESSION['user_id'] = $dados['cod']; 
+        $_SESSION['user_id'] = $dados['cod'];
         $_SESSION['nome'] = $dados['nome'];
     } else {
         $_SESSION['msg'] = "Usuário ou senha incorretos!!!";
@@ -28,25 +29,31 @@ $user_id = $_SESSION['user_id'];
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Página de Menu</title>
+    <title>Minhas Tarefas</title>
 </head>
 <body>
     <h1>Usuário logado: <?php echo $_SESSION['nome']; ?></h1>
-    <a href="logout.php">Sair</a>
+    <div>
+        <a href="menu.php">Home</a> | 
+        <a href="logout.php">Sair</a>
+    </div>
     <hr>
 
-    <h2>Adicionar Tarefa</h2>
+    <h2>Adicionar Nova Tarefa</h2>
+    <!-- CREATE (Inserção na Tabela de Escolha) -->
     <form action="inserir.php" method="POST">
-        <input type="text" name="descricao" placeholder="Descrição da Tarefa" required>
+        <label>Descrição:</label>
+        <input type="text" name="descricao" required size="40">
         <input type="submit" value="Adicionar">
     </form>
     <br>
 
-    <h2>Minhas Tarefas</h2>
-    <table border="1">
+    <h2>Minhas Tarefas (Consulta)</h2>
+    <!-- READ (Consulta dos Dados na Tabela de Escolha) -->
+    <table border="1" cellpadding="5">
         <thead>
-            <tr>
-                <th>Código</th>
+            <tr style="background-color: #eee;">
+                <th>ID</th>
                 <th>Descrição</th>
                 <th>Status</th>
                 <th>Ações</th>
@@ -54,24 +61,27 @@ $user_id = $_SESSION['user_id'];
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM tarefas WHERE usuario_id = $user_id ORDER BY data_criacao DESC";
+            $sql = "SELECT * FROM tarefas WHERE usuario_id = $user_id ORDER BY id ASC";
             $result = $conn->query($sql);
-            
-            while ($linha = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+
+            if($result->num_rows > 0){
+                while ($linha = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             ?>
-                <tr>
-                    <td><?php echo $linha['id']; ?></td>
-                    <td><?php echo $linha['descricao']; ?></td>
-                    <td><?php echo $linha['concluida'] ? "Concluída" : "Pendente"; ?></td>
-                    <td>
-                        <form action="alterar.php" method="POST">
-                            <input type="hidden" name="id_tarefa" value="<?php echo $linha['id']; ?>">
-                            <input type="hidden" name="status_atual" value="<?php echo $linha['concluida']; ?>">
-                            <input type="submit" value="Alterar Status">
-                        </form>
-                    </td>
-                </tr>
-            <?php } ?>
+                    <tr>
+                        <td><?php echo $linha['id']; ?></td>
+                        <td><?php echo $linha['descricao']; ?></td>
+                        <td><?php echo $linha['concluida'] ? "Concluída" : "Pendente"; ?></td>
+                        <td>
+                            <!-- Ação de UPDATE (Alterar) -->
+                            <a href="editar.php?id=<?php echo $linha['id']; ?>">Editar</a>
+                        </td>
+                    </tr>
+            <?php
+                }
+            } else {
+                echo "<tr><td colspan='4'>Nenhuma tarefa encontrada.</td></tr>";
+            }
+            ?>
         </tbody>
     </table>
 </body>
