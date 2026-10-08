@@ -11,8 +11,11 @@ Aplicação WEB desenvolvida em PHP com o objetivo de gerenciar tarefas, contend
 ## 🎓 Informações Acadêmicas
 
 **Faculdade:** Fatec Botucatu
+
 **Curso:** Análise e Desenvolvimento de Sistemas
+
 **Semestre:** 5º semestre
+
 **Disciplina:** Programação WEB
 
 ## 🛠 Tecnologias
